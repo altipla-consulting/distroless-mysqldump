@@ -27,8 +27,8 @@ jobs:
         docker run -v "$PWD":/work cgr.dev/chainguard/apko build apko.yaml image:local tmp/image.tar
         docker load < tmp/image.tar
 
-        docker tag image:local ghcr.io/altipla-consulting/distroless-mysqldump:latest
+        docker tag image:local-amd64 ghcr.io/altipla-consulting/distroless-mysqldump:latest
         docker push ghcr.io/altipla-consulting/distroless-mysqldump:latest
 
-        docker tag image:local ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
+        docker tag image:local-amd64 ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
         docker push ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
