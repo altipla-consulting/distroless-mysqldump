@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy production
+    name: Deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,5 +24,9 @@ jobs:
       run: |
         mkdir tmp
         docker run -v "$PWD":/work cgr.dev/chainguard/apko build apko.yaml image:local tmp/image.tar
-        docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:latest
-        docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
+
+        docker tag image:local ghcr.io/altipla-consulting/distroless-mysqldump:latest
+        docker push ghcr.io/altipla-consulting/distroless-mysqldump:latest
+        
+        docker tag image:local ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
+        docker push ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
