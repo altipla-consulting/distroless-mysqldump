@@ -27,15 +27,10 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Publish new image
-      run: |
-        mkdir tmp
-
-        docker run -v "$PWD":/work cgr.dev/chainguard/apko build apko.yaml image:local tmp/image.tar
-        docker load < tmp/image.tar
-
-        docker tag image:local-amd64 ghcr.io/altipla-consulting/distroless-mysqldump:latest
-        docker push ghcr.io/altipla-consulting/distroless-mysqldump:latest
-
-        docker tag image:local-amd64 ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
-        docker push ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        tags: |
+          ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
+          ghcr.io/altipla-consulting/distroless-mysqldump:latest
