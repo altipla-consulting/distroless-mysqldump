@@ -1,0 +1,27 @@
+
+name: Release
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  deploy:
+    name: Deploy production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Get the version
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Publish new image
+      run: |
+        docker run -v "$PWD":/work cgr.dev/chainguard/apko build apko.yaml image:local tmp/image.tar
+        docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:latest
+        docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
