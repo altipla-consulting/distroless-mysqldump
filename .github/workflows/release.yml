@@ -22,6 +22,7 @@ jobs:
 
     - name: Publish new image
       run: |
+        mkdir tmp
         docker run -v "$PWD":/work cgr.dev/chainguard/apko build apko.yaml image:local tmp/image.tar
         docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:latest
         docker push image:local ghcr.io/altipla-consulting/distroless-mysqldump:${{ steps.version.outputs.VERSION }}
